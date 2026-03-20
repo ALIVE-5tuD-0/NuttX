@@ -83,7 +83,7 @@ static const struct oneshot_operations_s g_riscv_mtimer_ops =
 #ifndef CONFIG_ARCH_USE_S_MODE
 static uint64_t riscv_mtimer_get_mtime(struct riscv_mtimer_lowerhalf_s *priv)
 {
-#ifdef CONFIG_ARCH_RV64
+#if defined CONFIG_ARCH_RV64 && !defined CONFIG_ARCH_CHIP_SG2002
   /* priv->mtime is -1, means this SoC:
    * 1. does NOT support 64bit/DWORD write for the mtimer compare value regs,
    * 2. has NO memory mapped regs which hold the value of mtimer counter,
@@ -91,6 +91,10 @@ static uint64_t riscv_mtimer_get_mtime(struct riscv_mtimer_lowerhalf_s *priv)
    */
 
   return -1 == priv->mtime ? READ_CSR(time) : getreg64(priv->mtime);
+#elif defined CONFIG_ARCH_CHIP_SG2002
+  uint64_t current_time = 0;
+  asm volatile("rdtime %0" : "=r" (current_time));
+  return current_time;
 #else
   uint32_t hi;
   uint32_t lo;
@@ -109,7 +113,7 @@ static uint64_t riscv_mtimer_get_mtime(struct riscv_mtimer_lowerhalf_s *priv)
 static void riscv_mtimer_set_mtimecmp(struct riscv_mtimer_lowerhalf_s *priv,
                                       uint64_t value)
 {
-#ifdef CONFIG_ARCH_RV64
+#if defined CONFIG_ARCH_RV64 && !defined CONFIG_ARCH_CHIP_SG2002
   if (-1 != priv->mtime)
     {
       putreg64(value, priv->mtimecmp);

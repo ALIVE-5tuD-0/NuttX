@@ -73,7 +73,17 @@
 #  define CSR_SCRATCH       mscratch         /* Scratch register */
 #  define CSR_EPC           mepc             /* Exception program counter */
 #  define CSR_IE            mie              /* Interrupt enable register */
+#  define CSR_IP            CSR_MIP          /* Interrupt pending register */
 #  define CSR_CAUSE         mcause           /* Interrupt cause register */
+#  define CSR_TVAL          CSR_MTVAL        /* Trap value register */
+#  define CSR_TVEC          CSR_MTVEC        /* Trap vector base addr register */
+#  define CSR_ENVCFG        CSR_MENVCFG      /* Env configuration register */
+#  define CSR_IEH           CSR_MIEH
+#  define CSR_ISELECT       CSR_MISELECT     /* Indirect select register */
+#  define CSR_IREG          CSR_MIREG        /* Indirect alias register */
+#  define CSR_IPH           CSR_MIPH
+#  define CSR_TOPEI         CSR_MTOPEI       /* Top external interrupt register */
+#  define CSR_TOPI          CSR_MTOPI        /* Top interrupt register */
 
 /* In status register */
 

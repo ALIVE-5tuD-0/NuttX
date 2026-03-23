@@ -80,8 +80,6 @@
 #define To_SG2002_Data_Reg(x)               ((SG2002_Data_Reg        *)((uintptr_t)&(x)))
 #define To_SG2002_RxSampleDly_Reg(x)        ((SG2002_RxSampleDly_Reg *)((uintptr_t)&(x)))
 
-#define reg_t volatile uint32_t
-
 typedef struct {
     reg_t ctrlr0;           /* 0x00 */
     reg_t ctrlr1;           /* 0x04 */
@@ -471,8 +469,8 @@ static uint16_t sg2002_spi_check_fifo_depth(struct sg2002_spi_priv_s *priv) {
         priv->fifo_depth = (depth == 1) ? 0 : depth;
         SG2002_SPI_TraceOut("spi fifo depth %d\n", priv->fifo_depth);
 
-        To_SG2002_TxFtlr_Reg(spi_reg->txftlr)->field.txftlr = 7;
-        if (To_SG2002_TxFtlr_Reg(spi_reg->txftlr)->field.txftlr != 7)
+        To_SG2002_TxFtlr_Reg(spi_reg->txftlr)->field.txftlr = 0;
+        if (To_SG2002_TxFtlr_Reg(spi_reg->txftlr)->field.txftlr != 0)
             SG2002_SPI_TraceOut("spi fifo reset failed\n");
     }
 
@@ -487,7 +485,11 @@ static void sg2002_spi_cs_ctl(struct sg2002_spi_priv_s *priv, bool state) {
 
     uint32_t reg_val = To_SG2002_Ser_Reg(spi_reg->ser)->val;
 
-    reg_val |= state << 0;
+    if (state) {
+        reg_val |= state << 0;
+    } else {
+        reg_val &= ~(state << 0);
+    }
 
     To_SG2002_Ser_Reg(spi_reg->ser)->val = reg_val;
 }
@@ -598,8 +600,6 @@ static void sg2002_spi_rx(struct sg2002_spi_priv_s *priv) {
                     break;
             }
 
-            SG2002_SPI_TraceOut("spi rx 0x%02x \n", data_tmp);
-
             priv->rx_buf += (uint8_t)(priv->config->bit_len);
             priv->rx_len --;
         }
@@ -689,6 +689,8 @@ static void sg2002_spi_transmit(struct sg2002_spi_priv_s *priv) {
     sg2002_spi_enctl(priv, true);
 
     bit_size = priv->config->bit_len * 8;
+
+    up_udelay(5);
 
     do {
         sg2002_spi_tx(priv);
@@ -875,7 +877,7 @@ struct spi_dev_s *sg2002_spibus_initialize(int port) {
     state &= sg2002_spi_set_mode(priv);
 
     /* set cs pin */
-    sg2002_spi_cs_ctl(priv, SG2002_SPI_CS_SET);
+    sg2002_spi_cs_ctl(priv, true);
 
     state &= sg2002_spi_enctl(priv, true);
 

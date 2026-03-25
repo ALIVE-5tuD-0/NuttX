@@ -166,6 +166,13 @@ static bool sg2002_timer_reset(sg2002_timer_reg *timer_reg) {
     return false;
 }
 
+static bool sg2002_timer_get_intstatus(sg2002_timer_reg *timer_reg) {
+    if (timer_reg == NULL)
+        return false;
+
+    return To_SG2002_Timer_IntStatusReg_Ptr(timer_reg->int_status)->field.int_status;
+}
+
 static uint32_t sg2002_timer_get_load_count(sg2002_timer_reg *timer_reg) {
     if (timer_reg == NULL)
         return 0;
@@ -303,7 +310,9 @@ static int sg2002_timer_ioctl(FAR struct timer_lowerhalf_s *lower, int cmd, unsi
 
     switch (cmd) {
         case SG2002_Timer_Set_Freq: priv->freq = (uint32_t)arg; break;
-        case SG2002_Timer_Get_Current_Count: return sg2002_timer_get_current_count(lower);
+        case SG2002_Timer_Get_Current_CountVal: return sg2002_timer_get_current_count(lower);
+        case SG2002_Timer_Get_Current_LoadCount: return sg2002_timer_get_load_count(lower);
+        case SG2002_Timer_Check_IntStatus: return sg2002_timer_get_intstatus(lower);
         default: return -1;
     }
 

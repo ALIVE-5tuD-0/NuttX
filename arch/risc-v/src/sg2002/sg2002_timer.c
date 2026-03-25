@@ -304,15 +304,18 @@ static int sg2002_timer_stop(FAR struct timer_lowerhalf_s *lower) {
 
 static int sg2002_timer_ioctl(FAR struct timer_lowerhalf_s *lower, int cmd, unsigned long arg) {
    struct sg2002_timer_priv_s *priv = (struct sg2002_timer_priv_s *)lower;
+    sg2002_timer_reg *timer = NULL;
 
     if ((priv == NULL) || (priv->config == NULL) || !sg2002_check_timer_base(priv->config->base))
         return -1; 
+    
+    timer = To_SG2002_SingleTimerReg_Ptr(priv->config->base);
 
     switch (cmd) {
         case SG2002_Timer_Set_Freq: priv->freq = (uint32_t)arg; break;
-        case SG2002_Timer_Get_Current_CountVal: return sg2002_timer_get_current_count(lower);
-        case SG2002_Timer_Get_Current_LoadCount: return sg2002_timer_get_load_count(lower);
-        case SG2002_Timer_Check_IntStatus: return sg2002_timer_get_intstatus(lower);
+        case SG2002_Timer_Get_Current_CountVal: return sg2002_timer_get_current_count(timer);
+        case SG2002_Timer_Get_Current_LoadCount: return sg2002_timer_get_load_count(timer);
+        case SG2002_Timer_Check_IntStatus: return sg2002_timer_get_intstatus(timer);
         default: return -1;
     }
 

@@ -281,6 +281,8 @@ static int sg2002_timer_stop(FAR struct timer_lowerhalf_s *lower) {
     if ((priv == NULL) || (priv->config == NULL) || !sg2002_check_timer_base(priv->config->base))
         return -1;
 
+    timer = To_SG2002_SingleTimerReg_Ptr(priv->config->base);
+
     /* set int mask */
     state &= sg2002_timer_int_mask_ctl(timer, true);
 
@@ -301,6 +303,7 @@ static int sg2002_timer_ioctl(FAR struct timer_lowerhalf_s *lower, int cmd, unsi
 
     switch (cmd) {
         case SG2002_Timer_Set_Freq: priv->freq = (uint32_t)arg; break;
+        case SG2002_Timer_Get_Current_Count: return sg2002_timer_get_current_count(timer);
         default: return -1;
     }
 

@@ -303,7 +303,7 @@ static int sg2002_timer_ioctl(FAR struct timer_lowerhalf_s *lower, int cmd, unsi
 
     switch (cmd) {
         case SG2002_Timer_Set_Freq: priv->freq = (uint32_t)arg; break;
-        case SG2002_Timer_Get_Current_Count: return sg2002_timer_get_current_count(timer);
+        case SG2002_Timer_Get_Current_Count: return sg2002_timer_get_current_count(lower);
         default: return -1;
     }
 

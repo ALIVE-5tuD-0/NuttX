@@ -79,7 +79,7 @@ struct sg2002_timer_priv_s {
 static int sg2002_timer_start(FAR struct timer_lowerhalf_s *lower);
 static int sg2002_timer_stop(FAR struct timer_lowerhalf_s *lower);
 static int sg2002_timer_ioctl(FAR struct timer_lowerhalf_s *lower, int cmd, unsigned long arg);
-static int sg2002_timer_set_callback(FAR struct timer_lowerhalf_s *lower, CODE tccb_t callback, FAR void *arg);
+static void sg2002_timer_set_callback(FAR struct timer_lowerhalf_s *lower, CODE tccb_t callback, FAR void *arg);
 static int sg2002_timer_get_status_dummy(FAR struct timer_lowerhalf_s *lower, FAR struct timer_status_s *status);
 static int sg2002_timer_set_timeout_dummy(FAR struct timer_lowerhalf_s *lower, uint32_t timeou);
 static int sg2002_timer_max_timeout_dummy(FAR struct timer_lowerhalf_s *lower, FAR uint32_t *maxtimeou);
@@ -322,16 +322,14 @@ static int sg2002_timer_ioctl(FAR struct timer_lowerhalf_s *lower, int cmd, unsi
     return 0;
 }
 
-static int sg2002_timer_set_callback(FAR struct timer_lowerhalf_s *lower, CODE tccb_t callback, FAR void *arg) {
+static void sg2002_timer_set_callback(FAR struct timer_lowerhalf_s *lower, CODE tccb_t callback, FAR void *arg) {
     struct sg2002_timer_priv_s *priv = (struct sg2002_timer_priv_s *)lower;
 
     if ((priv == NULL) || (priv->config == NULL) || !sg2002_check_timer_base(priv->config->base))
-        return -1;
+        return;
 
     priv->callback = (tccb_t)callback;
     priv->callback_arg = (void *)arg;
-
-    return 0;
 }
 
 static int sg2002_timer_get_status_dummy(FAR struct timer_lowerhalf_s *lower, FAR struct timer_status_s *status) {

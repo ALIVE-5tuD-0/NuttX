@@ -287,14 +287,11 @@ bool sg2002_gpio_read(sg2002_gpioset_t pin) {
 int sg2002_gpio_set_event(sg2002_gpioset_t pin, bool risingedge, bool fallingedge, bool event, xcpt_t func, void *arg) {
     uint8_t int_type = 0;
     uint32_t mask = 0;
-    volatile sg2002_gpio_reg_TypeDef *port_reg = NULL;
     UNUSED(event);
     
     /* check port or both set or both reset */
     if ((risingedge & fallingedge) || !(risingedge | fallingedge))
         return -1;
-
-    port_reg = SG2002_Port_2_BaseReg(SG2002_Conf[pin.field.port].base_addr);
 
     mask = (1 << pin.field.pin);
 

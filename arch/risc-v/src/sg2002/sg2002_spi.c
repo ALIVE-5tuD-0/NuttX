@@ -173,7 +173,7 @@ static uint32_t sg2002_spi_set_freq_dummy(FAR struct spi_dev_s *dev, uint32_t fr
 static void sg2002_spi_setbits_dummy(FAR struct spi_dev_s *dev, int nbits);
 static void sg2002_spi_set_mode_external(FAR struct spi_dev_s *dev, enum spi_mode_e mode);
 static int sg2002_spi_lock(FAR struct spi_dev_s *dev, bool lock);
-static uint32_t sg2002_spi_send_byte(FAR struct spi_dev_s *dev, uint8_t wd);
+static uint32_t sg2002_spi_send_byte(FAR struct spi_dev_s *dev, uint32_t wd);
 #if defined(CONFIG_SPI_EXCHANGE)
 static void sg2002_spi_exchange(struct spi_dev_s *dev, const void *txbuffer, void *rxbuffer, size_t nwords);
 #else
@@ -755,10 +755,10 @@ static int sg2002_spi_lock(FAR struct spi_dev_s *dev, bool lock) {
     return nxsem_post(&priv->exclsem);
 }
 
-static uint32_t sg2002_spi_send_byte(FAR struct spi_dev_s *dev, uint8_t wd) {
+static uint32_t sg2002_spi_send_byte(FAR struct spi_dev_s *dev, uint32_t wd) {
     struct sg2002_spi_priv_s *priv = (struct sg2002_spi_priv_s *)dev;
     uint8_t rx_data = 0;
-    uint8_t tx_data = wd;
+    uint8_t tx_data = (uint8_t)wd;
 
     if ((priv == NULL) || (priv->config == NULL) || \
         !sg2002_check_spibus_base(priv->config->base) || (priv->refs == 0))

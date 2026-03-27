@@ -57,7 +57,7 @@ void up_irqinitialize(void)
 
 #if defined(CONFIG_STACK_COLORATION) && CONFIG_ARCH_INTERRUPTSTACK > 15
   size_t intstack_size = (CONFIG_ARCH_INTERRUPTSTACK & ~15);
-  riscv_stack_color(g_intstackalloc, intstack_size);
+  riscv_stack_color((void *)&g_intstackalloc, intstack_size);
 #endif
 
   putreg32(0x0, SG2002_PLIC_ENABLE1);

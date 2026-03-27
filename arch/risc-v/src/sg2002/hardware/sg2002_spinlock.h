@@ -1753,10 +1753,10 @@ __ALWAYS_STATIC_INLINE uint32_t __USADA8(uint32_t x, uint32_t y, uint32_t sum)
     t = (abs((long long)((x <<  8) >> 24) - ((y <<  8) >> 24))) & 0x000000FF;
     u = (abs((long long)((x) >> 24) - ((y) >> 24))) & 0x000000FF;
 #else
-    r = (abs(((x << 24) >> 24) - ((y << 24) >> 24))) & 0x000000FF;
-    s = (abs(((x << 16) >> 24) - ((y << 16) >> 24))) & 0x000000FF;
-    t = (abs(((x <<  8) >> 24) - ((y <<  8) >> 24))) & 0x000000FF;
-    u = (abs(((x) >> 24) - ((y) >> 24))) & 0x000000FF;
+    r = (abs((int32_t)((x << 24) >> 24) - (int32_t)((y << 24) >> 24))) & 0x000000FF;
+    s = (abs((int32_t)((x << 16) >> 24) - (int32_t)((y << 16) >> 24))) & 0x000000FF;
+    t = (abs((int32_t)((x <<  8) >> 24) - (int32_t)((y <<  8) >> 24))) & 0x000000FF;
+    u = (abs((int32_t)((x) >> 24) - (int32_t)((y) >> 24))) & 0x000000FF;
 #endif
     return (u + t + s + r + sum);
 }

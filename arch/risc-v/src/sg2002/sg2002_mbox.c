@@ -33,9 +33,9 @@ DEFINE_CVI_SPINLOCK(mailbox_send_lock, SG2002_Spin_MBOX);
 
 static int sg2002_mailbox_send(FAR struct mbox_dev_s *dev, uint32_t ch, uintptr_t msg);
 static int sg2002_mailbox_registercallback(FAR struct mbox_dev_s *dev, uint32_t ch, mbox_receive_t callback, FAR void *arg);
-static const int32_t sg2002_get_sec_addr(uint8_t index);
-static const int32_t sg2002_get_sec_size(uint8_t index);
-static const int sg2002_get_sec_num(void);
+static uint32_t sg2002_get_sec_addr(uint8_t index);
+static uint32_t sg2002_get_sec_size(uint8_t index);
+static uint32_t sg2002_get_sec_num(void);
 
 typedef struct {
     uint32_t reg_base;
@@ -251,7 +251,7 @@ static void sg2002_get_comm_info(void) {
     sg2002_flush_dcache_range((uintptr_t)&sg2002_mailbox_priv.transfer_config, sizeof(transfer_config_t));
 }
 
-static const uint32_t sg2002_get_sec_addr(uint8_t index) {
+static uint32_t sg2002_get_sec_addr(uint8_t index) {
     switch (index) {
         case (uint8_t)SG2002_Sec_1: return Mailbox_Sec_1.addr;
         case (uint8_t)SG2002_Sec_2: return Mailbox_Sec_2.addr;
@@ -261,7 +261,7 @@ static const uint32_t sg2002_get_sec_addr(uint8_t index) {
     return 0;
 }
 
-static const uint32_t sg2002_get_sec_size(uint8_t index) {
+static uint32_t sg2002_get_sec_size(uint8_t index) {
     switch (index) {
         case (uint8_t)SG2002_Sec_1: return Mailbox_Sec_1.size;
         case (uint8_t)SG2002_Sec_2: return Mailbox_Sec_2.size;
@@ -271,7 +271,7 @@ static const uint32_t sg2002_get_sec_size(uint8_t index) {
     return 0;
 }
 
-static const int sg2002_get_sec_num(void) {
+static uint32_t sg2002_get_sec_num(void) {
     return SG2002_MAILBOX_SEC_SUM;
 }
 

@@ -263,8 +263,8 @@ static const int32_t sg2002_get_sec_addr(uint8_t index) {
 
 static const int32_t sg2002_get_sec_size(uint8_t index) {
     switch (index) {
-        case (uint8_t)SG2002_Sec_1: return &Mailbox_Sec_1.size;
-        case (uint8_t)SG2002_Sec_2: return &Mailbox_Sec_2.size;
+        case (uint8_t)SG2002_Sec_1: return Mailbox_Sec_1.size;
+        case (uint8_t)SG2002_Sec_2: return Mailbox_Sec_2.size;
         default: break;
     }
 

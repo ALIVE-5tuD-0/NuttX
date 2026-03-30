@@ -86,7 +86,7 @@ static const sg2002_mailbox_config_s sg2002_mailbox_config = {
 static const struct mbox_ops_s sg2002_mbox_ops = {
     .send = sg2002_mailbox_send,
     .registercallback = sg2002_mailbox_registercallback,
-    .get_sec_num = sg2002_get_sec_num,
+    .get_sec_sum = sg2002_get_sec_num,
     .get_sec_start_addr = sg2002_get_sec_addr,
     .get_sec_size = sg2002_get_sec_size,
 };

@@ -156,6 +156,12 @@ typedef struct {
  * Public Types
  ****************************************************************************/
 
+struct mbox_transfer_s {
+  uint8_t ip_id;
+  uint8_t cmd_id;
+  uint32_t param_ptr;
+};
+
 struct mbox_dev_s;
 typedef CODE int (*mbox_receive_t)(FAR void *arg, uintptr_t msg);
 

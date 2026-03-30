@@ -87,7 +87,7 @@ static int mboxdrvr_ioctl(FAR struct file *filep, int cmd, unsigned long arg) {
 
             /* check arg */
             /* check sec id */
-            if (p_mb_tx->sec_id > priv->mbox->get_sec_num())
+            if (p_mb_tx->sec_id > priv->mbox->get_sec_sum())
                 return -1;
 
             /* check trans type */
@@ -99,11 +99,17 @@ static int mboxdrvr_ioctl(FAR struct file *filep, int cmd, unsigned long arg) {
                 /* check selected section area avaliable */
 
                 /* check target memory addr */
-                mb_mem_end_addr = priv->mbox->get_sec_start_addr(p_mb_tx->sec_id);
-                mb_mem_end_addr += priv->mbox->sg2002_get_sec_size(p_mb_tx->sec_id);
+#if (CONFIG_ARCH_CHIP_SG2002)
+                if ((priv->mbox->ops->get_sec_start_addr == NULL) || \
+                    (priv->mbox->ops->get_sec_size == NULL))
+                    return -1;
+
+                mb_mem_end_addr = priv->mbox->ops->get_sec_start_addr(p_mb_tx->sec_id);
+                mb_mem_end_addr += priv->mbox->ops->get_sec_size(p_mb_tx->sec_id);
             
                 if (p_mb_tx->tar.addr >= mb_mem_end_addr)
                     return -1;
+#endif
             }
 
             ret = MBOX_SEND(priv->mbox, 0, arg);

@@ -51,7 +51,7 @@
 #define MBOXIOC_GET_SUM       _MBOXIOC(0x0004)
 
 typedef enum {
-  Trans_to_TargetAddr = 0,
+  Trans_To_TargetAddr = 0,
   Trans_uint8,
   Trans_uint16,
   Trans_uint32,
@@ -170,9 +170,9 @@ struct mbox_ops_s
   CODE int (*send)(FAR struct mbox_dev_s *dev, uint32_t ch, uintptr_t msg);
   CODE int (*registercallback)(FAR struct mbox_dev_s *dev, uint32_t ch,
                                mbox_receive_t callback, FAR void *arg);
-  CODE const int (*get_sec_sum)(void);
-  CODE const int (*get_sec_start_addr)(uint8_t index);
-  CODE const int (*get_sec_size)(uint8_t index);
+  CODE const uint32_t (*get_sec_sum)(void);
+  CODE const uint32_t (*get_sec_start_addr)(uint8_t index);
+  CODE const uint32_t (*get_sec_size)(uint8_t index);
 };
 
 struct mbox_dev_s

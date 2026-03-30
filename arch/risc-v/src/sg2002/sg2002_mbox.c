@@ -251,24 +251,24 @@ static void sg2002_get_comm_info(void) {
     sg2002_flush_dcache_range((uintptr_t)&sg2002_mailbox_priv.transfer_config, sizeof(transfer_config_t));
 }
 
-static const int32_t sg2002_get_sec_addr(uint8_t index) {
+static const uint32_t sg2002_get_sec_addr(uint8_t index) {
     switch (index) {
         case (uint8_t)SG2002_Sec_1: return Mailbox_Sec_1.addr;
         case (uint8_t)SG2002_Sec_2: return Mailbox_Sec_2.addr;
         default: break;
     }
 
-    return -1;
+    return 0;
 }
 
-static const int32_t sg2002_get_sec_size(uint8_t index) {
+static const uint32_t sg2002_get_sec_size(uint8_t index) {
     switch (index) {
         case (uint8_t)SG2002_Sec_1: return Mailbox_Sec_1.size;
         case (uint8_t)SG2002_Sec_2: return Mailbox_Sec_2.size;
         default: break;
     }
 
-    return -1;
+    return 0;
 }
 
 static const int sg2002_get_sec_num(void) {

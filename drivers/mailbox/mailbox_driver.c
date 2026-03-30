@@ -81,10 +81,34 @@ static int mboxdrvr_ioctl(FAR struct file *filep, int cmd, unsigned long arg) {
 
     Mailbox_TraceOut("mailbox driver ioctl\n");
     switch (cmd) {
-        case MBOXIOC_SEND:
-            Mailbox_TraceOut("mailbox driver send\n");
+        case MBOXIOC_SEND: {
+            mailbox_send_struture_t *p_mb_tx = (mailbox_send_struture_t *)arg;
+            uint32_t mb_mem_end_addr = 0;
+
+            /* check arg */
+            /* check sec id */
+            if (p_mb_tx->sec_id > priv->mbox->get_sec_num())
+                return -1;
+
+            /* check trans type */
+            if (p_mb_tx->trans_type > Trans_double)
+                return -1;
+
+            if (p_mb_tx->trans_type == Trans_To_TargetAddr) {
+                /* TO DO */
+                /* check selected section area avaliable */
+
+                /* check target memory addr */
+                mb_mem_end_addr = priv->mbox->get_sec_start_addr(p_mb_tx->sec_id);
+                mb_mem_end_addr += priv->mbox->sg2002_get_sec_size(p_mb_tx->sec_id);
+            
+                if (p_mb_tx->tar.addr >= mb_mem_end_addr)
+                    return -1;
+            }
+
             ret = MBOX_SEND(priv->mbox, 0, arg);
             break;
+        }
 
         default: ret = -ENOTTY; break;
     }

@@ -301,8 +301,6 @@ static bool sg2002_spi_reset(struct sg2002_spi_priv_s *priv) {
 
     ret &= sg2002_spi_enctl(priv, true);
 
-    SG2002_SPI_TraceOut("spi reset %s\n", ret ? "done" : "failed");
-
     return ret;
 }
 
@@ -467,7 +465,6 @@ static uint16_t sg2002_spi_check_fifo_depth(struct sg2002_spi_priv_s *priv) {
         }
 
         priv->fifo_depth = (depth == 1) ? 0 : depth;
-        SG2002_SPI_TraceOut("spi fifo depth %d\n", priv->fifo_depth);
 
         To_SG2002_TxFtlr_Reg(spi_reg->txftlr)->field.txftlr = 0;
         if (To_SG2002_TxFtlr_Reg(spi_reg->txftlr)->field.txftlr != 0)

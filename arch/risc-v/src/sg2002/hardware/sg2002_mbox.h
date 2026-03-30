@@ -13,6 +13,8 @@
 
 #define SG2002_LINUX_VALID_VALID		1
 
+#define SG2002_MAILBOX_SEC_SUM			2
+
 #define H26X_BITSTREAM_ADDR 			0x89500000  /* offset 149.0MiB */
 #define H26X_BITSTREAM_SIZE 			0x200000  	/* 2.0MiB */
 #define H26X_ENC_BUFF_ADDR 				0x89700000  /* offset 151.0MiB */
@@ -140,5 +142,15 @@ typedef struct {
 	uint8_t  mcu_status;
 	uint8_t  linux_status;
 } __attribute__((packed)) __attribute__((aligned(0x40))) transfer_config_t;
+
+typedef enum {
+	SG2002_Sec_1 = 0,
+	SG2002_Sec_2,
+} sg2002_sec_List;
+
+typedef struct {
+	const uint32_t addr;
+	const uint32_t size;
+} sg2002_mailbox_secinfo_TypeDef;
 
 #endif

@@ -33,6 +33,9 @@ DEFINE_CVI_SPINLOCK(mailbox_send_lock, SG2002_Spin_MBOX);
 
 static int sg2002_mailbox_send(FAR struct mbox_dev_s *dev, uint32_t ch, uintptr_t msg);
 static int sg2002_mailbox_registercallback(FAR struct mbox_dev_s *dev, uint32_t ch, mbox_receive_t callback, FAR void *arg);
+static const int32_t sg2002_get_sec_addr(uint8_t index);
+static const int32_t sg2002_get_sec_size(uint8_t index);
+static const int sg2002_get_sec_num(void);
 
 typedef struct {
     uint32_t reg_base;
@@ -63,6 +66,16 @@ typedef struct {
     sg2002_mailbox_rx_cb_item_s *cb_list;
 } sg2002_mailbox_priv_s;
 
+sg2002_mailbox_secinfo_TypeDef Mailbox_Sec_1 = {
+    .addr = H26X_BITSTREAM_ADDR,
+    .size = H26X_BITSTREAM_SIZE,
+};
+
+sg2002_mailbox_secinfo_TypeDef Mailbox_Sec_2 = {
+    .addr = ISP_MEM_BASE_ADDR,
+    .size = ISP_MEM_BASE_SIZE,
+};
+
 static const sg2002_mailbox_config_s sg2002_mailbox_config = {
     .reg_base = SG2002_MAILBOX_REG_ADDR,
     .done_base = SG2002_MAILBOX_DONE_REG_ADDR,
@@ -73,6 +86,9 @@ static const sg2002_mailbox_config_s sg2002_mailbox_config = {
 static const struct mbox_ops_s sg2002_mbox_ops = {
     .send = sg2002_mailbox_send,
     .registercallback = sg2002_mailbox_registercallback,
+    .get_sec_num = sg2002_get_sec_num,
+    .get_sec_start_addr = sg2002_get_sec_addr,
+    .get_sec_size = sg2002_get_sec_size,
 };
 
 static sg2002_mailbox_priv_s sg2002_mailbox_priv = {
@@ -233,6 +249,30 @@ static void sg2002_get_comm_info(void) {
     sg2002_mailbox_priv.transfer_config.mcu_status = MCU_STATUS_RTOS_T1_INIT;
     sg2002_mailbox_priv.transfer_config.linux_status = MCU_STATUS_LINUX_INIT ;
     sg2002_flush_dcache_range((uintptr_t)&sg2002_mailbox_priv.transfer_config, sizeof(transfer_config_t));
+}
+
+static const int32_t sg2002_get_sec_addr(uint8_t index) {
+    switch (index) {
+        case (uint8_t)SG2002_Sec_1: return Mailbox_Sec_1.addr;
+        case (uint8_t)SG2002_Sec_2: return Mailbox_Sec_2.addr;
+        default: break;
+    }
+
+    return -1;
+}
+
+static const int32_t sg2002_get_sec_size(uint8_t index) {
+    switch (index) {
+        case (uint8_t)SG2002_Sec_1: return &Mailbox_Sec_1.size;
+        case (uint8_t)SG2002_Sec_2: return &Mailbox_Sec_2.size;
+        default: break;
+    }
+
+    return -1;
+}
+
+static const int sg2002_get_sec_num(void) {
+    return SG2002_MAILBOX_SEC_SUM;
 }
 
 struct mbox_dev_s *sg2002_mailbox_initialize(void) {

@@ -45,8 +45,54 @@
  * Dependencies: CONFIG_MBOX_DRIVER
  */
 
-#define MBOXIOC_SEND      _MBOXIOC(0x0001)
-#define MBOXIOC_SEND_WAIT _MBOXIOC(0x0002)
+#define MBOXIOC_SEND          _MBOXIOC(0x0001)
+#define MBOXIOC_SEND_WAIT     _MBOXIOC(0x0002)
+#define MBOXIOC_GET_SEC_INFO  _MBOXIOC(0x0003)
+#define MBOXIOC_GET_SUM       _MBOXIOC(0x0004)
+
+typedef enum {
+  Trans_to_TargetAddr = 0,
+  Trans_uint8,
+  Trans_uint16,
+  Trans_uint32,
+  Trans_uint64,
+  Trans_int8,
+  Trans_int16,
+  Trans_int32,
+  Trans_int64,
+  Trans_float,
+  Trans_double,
+} mailbox_transtype_e;
+
+typedef struct {
+  uint8_t cmd_id;
+  uint8_t sec_id;
+  uint8_t trans_type;
+
+  union {
+    struct {
+      uint32_t addr;
+      uint32_t size;
+    } tar;
+  
+    struct {
+      uint8_t u8_v;
+      uint16_t u16_v;
+      uint32_t u32_v;
+      uint64_t u64_v;
+
+      int8_t i8_v;
+      int16_t i16_v;
+      int32_t i32_v;
+      int64_t i64_v;
+
+      float f_v;
+      double d_v;
+    } val;
+
+    uint8_t buf[8];
+  }
+} mailbox_send_struture_t;
 
 /* Access macros ************************************************************/
 
@@ -110,12 +156,6 @@
  * Public Types
  ****************************************************************************/
 
-struct mbox_transfer_s {
-  uint8_t ip_id;
-  uint8_t cmd_id;
-  uint32_t param_ptr;
-};
-
 struct mbox_dev_s;
 typedef CODE int (*mbox_receive_t)(FAR void *arg, uintptr_t msg);
 
@@ -124,6 +164,9 @@ struct mbox_ops_s
   CODE int (*send)(FAR struct mbox_dev_s *dev, uint32_t ch, uintptr_t msg);
   CODE int (*registercallback)(FAR struct mbox_dev_s *dev, uint32_t ch,
                                mbox_receive_t callback, FAR void *arg);
+  CODE const int (*get_sec_sum)(void);
+  CODE const int (*get_sec_start_addr)(uint8_t index);
+  CODE const int (*get_sec_size)(uint8_t index);
 };
 
 struct mbox_dev_s

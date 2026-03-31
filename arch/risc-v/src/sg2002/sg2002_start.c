@@ -79,12 +79,18 @@ extern void __trap_vec(void);
 
 void sg2002_clear_bss(void)
 {
-	uint32_t *dest = NULL;
+	const uint32_t *src;
+	uint32_t *dest;
 
-	for (dest = (uint32_t *)((uintptr_t)_sbss); dest < (uint32_t *)((uintptr_t)_ebss);)
+	for (dest = (uint32_t *)((uintptr_t)&_sbss); dest < (uint32_t *)((uintptr_t)&_ebss);)
     {
     	*dest++ = 0;
     }
+
+	for (src = (uint32_t *)((uintptr_t)&_eronly), dest = (uint32_t *)((uintptr_t)&_sdata); dest < (uint32_t)((uintptr_t)&_edata); )
+	{
+		*dest++ = *src++;
+	}
 }
 
 /****************************************************************************

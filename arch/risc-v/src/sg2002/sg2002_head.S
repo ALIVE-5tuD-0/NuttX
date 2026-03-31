@@ -76,9 +76,6 @@ __start:
 	li   x3, ((0x1 << 13) | (0x03 << 11))
 	csrs CSR_MSTATUS, x3	/* enable floating point set MPP to machine mode */
 
-    fsflags      zero
-    fsrm         zero
-
     fence.i
 
 	la   t0, __trap_vec

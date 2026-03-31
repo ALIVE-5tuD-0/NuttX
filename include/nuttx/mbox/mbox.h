@@ -91,7 +91,7 @@ typedef struct {
     } val;
 
     uint8_t buf[8];
-  }
+  };
 } mailbox_send_struture_t;
 
 /* Access macros ************************************************************/

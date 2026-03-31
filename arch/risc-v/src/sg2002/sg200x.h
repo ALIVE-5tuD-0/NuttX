@@ -13,5 +13,6 @@
 #include "sg2002_mbox.h"
 #include "sg2002_gpio.h"
 #include "sg2002_timer.h"
+#include "sg2002_debug.h"
 
 #endif /* __ARCH_RISCV_SRC_SG200X_H */

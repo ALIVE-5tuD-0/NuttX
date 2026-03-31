@@ -1,4 +1,4 @@
-#include "hardware/sg2002_debug.h"
+#include "sg200x.h"
 
 #define TRACE_BUF_SIZE      2048
 #define TRACE_HEADER_SIZE   1024

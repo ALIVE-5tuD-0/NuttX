@@ -87,7 +87,7 @@ void sg2002_clear_bss(void)
     	*dest++ = 0;
     }
 
-	for (src = (uint32_t *)((uintptr_t)&_eronly), dest = (uint32_t *)((uintptr_t)&_sdata); dest < (uint32_t)((uintptr_t)&_edata); )
+	for (src = (uint32_t *)((uintptr_t)&_eronly), dest = (uint32_t *)((uintptr_t)&_sdata); dest < (uint32_t *)((uintptr_t)&_edata); )
 	{
 		*dest++ = *src++;
 	}
